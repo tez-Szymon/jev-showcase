@@ -74,8 +74,6 @@ Transactions cover request changes and history, never the wait for the API. A su
 
 The database is created automatically at `data/demo.sqlite`. Restarting preserves data. To back it up, stop the server and copy the database along with any WAL/SHM files. This demo runs as one local server with persistent storage. Stateless hosting requires a different storage setup.
 
-Opening a database from the original demo automatically migrates stored team names and unchanged seed content to English. IDs, assignments, settings, timestamps, and history are preserved. User-written text is not translated or overwritten. The question/catalog version was incremented for the English classification prompt, so old analyses remain visible but cannot be previewed against the new question version.
-
 There is deliberately no authentication or access control. Anyone who can reach the application can view requests and change decisions or settings. Server scripts bind to `127.0.0.1` by default. Accounts, CRM integration, attachments, replies, SLAs, and production deployment are outside scope.
 
 ## Verification
