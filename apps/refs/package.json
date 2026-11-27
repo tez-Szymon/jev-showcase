@@ -1,0 +1,14 @@
+{
+  "name": "jev-image-references",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Images inside Jev instructions and criteria",
+  "type": "module",
+  "scripts": {
+    "start": "node --env-file-if-exists=.env server.js"
+  },
+  "dependencies": {
+    "@typesafe-ai/sdk": "^0.7.0",
+    "sharp": "^0.35.5"
+  }
+}

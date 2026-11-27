@@ -1,0 +1,26 @@
+{
+  "name": "linkedin-bs-detector",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node --import tsx scripts/build.ts",
+    "dev": "node --import tsx --env-file=.env server/index.ts",
+    "start": "node --import tsx server/index.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "node --import tsx --test tests/*.test.ts",
+    "test:browser": "playwright test",
+    "test:extension": "node --import tsx scripts/test-extension.ts",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.55.0",
+    "@types/chrome": "^0.1.0",
+    "@types/node": "^22.0.0",
+    "esbuild": "^0.25.0",
+    "prettier": "3.9.9",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0"
+  }
+}

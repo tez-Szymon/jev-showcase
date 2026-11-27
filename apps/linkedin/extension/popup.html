@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pl">
+  <meta charset="utf-8" /><title>LinkedIn: Detektor lania wody</title
+  ><link rel="stylesheet" href="popup.css" />
+  <body>
+    <header>
+      <span class="logo">bs.</span><span>LinkedIn<br /><strong>Detektor lania wody</strong></span
+      ><span id="mode">Jev: …</span>
+    </header>
+    <section>
+      <label class="enabled"
+        >Wykrywaj lanie wody <input id="enabled" type="checkbox" role="switch"
+      /></label>
+      <p>Mniej szumu. Więcej konkretów.</p>
+    </section>
+    <section>
+      <label for="sensitivity">Czułość <output id="level">Umiarkowana</output></label
+      ><input id="sensitivity" type="range" min="0" max="100" />
+      <div class="ends"><span>Łagodna</span><span>Surowa</span></div>
+    </section>
+    <section>
+      <h2>Pokaż przy postach</h2>
+      <label>Wskaźnik lania wody<input id="meter" type="checkbox" /></label
+      ><label>Oceny szczegółowe<input id="details" type="checkbox" /></label
+      ><label>Etykiety treści<input id="labels" type="checkbox" /></label>
+    </section>
+    <section>
+      <label for="minLength">Minimalna długość posta</label>
+      <div class="number">
+        <input id="minLength" type="number" min="0" max="3000" step="10" /><span>znaków</span>
+      </div>
+    </section>
+    <section>
+      <h2>Połączenie z aktualnościami</h2>
+      <p id="feed-status" role="status">Sprawdzam tę kartę…</p>
+      <button id="check-feed">Sprawdź aktualności</button>
+    </section>
+    <button id="reanalyze">↻ Oceń widoczne posty ponownie</button>
+    <p id="status" role="status"></p>
+    <footer>Ocenia treść. Nigdy człowieka.<br />Analiza: Jev · TypeSafe AI</footer>
+    <script src="popup.js"></script>
+  </body>
+</html>

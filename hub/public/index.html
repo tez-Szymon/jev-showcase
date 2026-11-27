@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Jev Showcase</title>
+    <style>
+      :root {
+        --bg: #f4f5f2;
+        --panel: #ffffff;
+        --ink: #1c2420;
+        --muted: #66716b;
+        --line: #dfe3de;
+        --accent: #2f6b52;
+        --ok: #3f9a68;
+        --warn: #c48a2c;
+        --bad: #c0464f;
+        --idle: #a3aba6;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #141816;
+          --panel: #1c211e;
+          --ink: #e5ebe7;
+          --muted: #96a29b;
+          --line: #2d3430;
+          --accent: #7fc4a2;
+        }
+      }
+      * { box-sizing: border-box; }
+      html, body { height: 100%; margin: 0; }
+      body {
+        display: grid;
+        grid-template-rows: auto auto 1fr;
+        background: var(--bg);
+        color: var(--ink);
+        font: 14px/1.45 ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        padding: 10px 16px 0;
+        background: var(--panel);
+        border-bottom: 1px solid var(--line);
+        overflow-x: auto;
+      }
+      .brand { font-weight: 700; letter-spacing: -0.01em; white-space: nowrap; padding-bottom: 10px; }
+      .brand span { color: var(--accent); }
+      nav { display: flex; gap: 2px; }
+      nav button {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        border: 0;
+        border-bottom: 2px solid transparent;
+        background: none;
+        color: var(--muted);
+        font: inherit;
+        font-weight: 550;
+        padding: 6px 12px 12px;
+        cursor: pointer;
+        white-space: nowrap;
+      }
+      nav button:hover { color: var(--ink); }
+      nav button[aria-selected='true'] { color: var(--ink); border-bottom-color: var(--accent); }
+      .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--idle); flex: none; }
+      .dot.running { background: var(--ok); }
+      .dot.starting { background: var(--warn); animation: pulse 1.2s infinite; }
+      .dot.error, .dot.stopped, .dot.missing-key, .dot.not-installed { background: var(--bad); }
+      @keyframes pulse { 50% { opacity: 0.35; } }
+      .bar {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 16px;
+        border-bottom: 1px solid var(--line);
+        color: var(--muted);
+        min-height: 40px;
+      }
+      .bar .blurb { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .live {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        color: var(--ok);
+        border: 1px solid currentColor;
+        border-radius: 999px;
+        padding: 1px 8px;
+      }
+      .bar a, .bar button {
+        color: var(--accent);
+        background: none;
+        border: 0;
+        font: inherit;
+        cursor: pointer;
+        text-decoration: none;
+        white-space: nowrap;
+        padding: 0;
+      }
+      main { position: relative; min-height: 0; }
+      iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #fff; }
+      iframe[hidden] { display: none; }
+      .notice {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-content: center;
+        gap: 12px;
+        padding: 24px;
+        text-align: center;
+        color: var(--muted);
+      }
+      .notice h2 { margin: 0; color: var(--ink); font-size: 18px; }
+      .notice code { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 2px 6px; }
+      .notice pre {
+        max-width: min(900px, 90vw);
+        max-height: 40vh;
+        overflow: auto;
+        margin: 0;
+        text-align: left;
+        font-size: 12px;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 12px;
+      }
+      .ext { position: absolute; inset: 0; overflow: auto; padding: 20px 16px 40px; }
+      .ext-intro { max-width: 1100px; margin: 0 auto 16px; color: var(--muted); }
+      .cards { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); max-width: 1100px; margin: 0 auto; }
+      .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: grid; gap: 10px; align-content: start; }
+      .card h3 { margin: 0; font-size: 16px; display: flex; align-items: center; gap: 8px; }
+      .card p { margin: 0; color: var(--muted); }
+      .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+      .state { font-weight: 600; }
+      .btn { font: inherit; font-weight: 600; border-radius: 8px; padding: 6px 14px; cursor: pointer; border: 1px solid var(--accent); background: var(--accent); color: var(--panel); }
+      .btn.stop { background: none; color: var(--bad); border-color: var(--bad); }
+      .btn:disabled { opacity: 0.5; cursor: default; }
+      dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 0; font-size: 13px; }
+      dt { color: var(--muted); }
+      dd { margin: 0; overflow-wrap: anywhere; }
+      details { font-size: 13px; color: var(--muted); }
+      details code { font-size: 12px; }
+      details pre { max-height: 180px; overflow: auto; font-size: 11px; background: var(--bg); border-radius: 6px; padding: 8px; margin: 6px 0 0; white-space: pre-wrap; }
+      .card a { color: var(--accent); }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="brand">Jev <span>Showcase</span></div>
+      <nav role="tablist" id="tabs"></nav>
+    </header>
+    <div class="bar">
+      <span class="live">LIVE</span>
+      <span class="blurb" id="blurb"></span>
+      <button id="reload" type="button">Reload</button>
+      <button id="restart" type="button">Restart server</button>
+      <a id="open" target="_blank" rel="noopener">Open in new tab ↗</a>
+    </div>
+    <main id="stage"></main>
+    <script type="module">
+      const $ = (id) => document.getElementById(id);
+      const EXT = 'extensions';
+      const label = {
+        running: 'Running',
+        starting: 'Starting…',
+        stopping: 'Stopping…',
+        stopped: 'Stopped',
+        error: 'Not responding',
+        'missing-key': 'Missing API key',
+        'not-installed': 'Not installed',
+      };
+      let apps = [];
+      let current = location.hash.slice(1);
+      const frames = new Map();
+      const web = () => apps.filter((a) => !a.extension);
+      const exts = () => apps.filter((a) => a.card);
+      const el = (tag, props = {}, ...kids) => {
+        const n = Object.assign(document.createElement(tag), props);
+        n.append(...kids);
+        return n;
+      };
+
+      function notice(app) {
+        const box = el('div', { className: 'notice' });
+        const h = el('h2');
+        const p = el('p');
+        if (app.status === 'missing-key') {
+          h.textContent = `${app.name} needs ${app.missing.join(' and ')}`;
+          p.innerHTML = `Add it to <code>jev-showcase/.env</code>, then click <b>Restart server</b>.`;
+        } else if (app.status === 'not-installed') {
+          h.textContent = `${app.name} is not installed`;
+          p.innerHTML = `Run <code>npm run setup</code> in <code>jev-showcase</code>.`;
+        } else if (app.status === 'starting') {
+          h.textContent = `Starting ${app.name}…`;
+          p.textContent = 'The first start of a Next.js app can take a few seconds.';
+        } else {
+          h.textContent = `${app.name} is not responding`;
+          p.textContent = 'Recent server output:';
+        }
+        box.append(h, p);
+        if (!['missing-key', 'not-installed'].includes(app.status)) {
+          const pre = el('pre');
+          fetch(`/api/logs/${app.id}`)
+            .then((r) => r.json())
+            .then((lines) => (pre.textContent = lines.slice(-25).join('\n') || '(no output yet)'));
+          box.append(pre);
+        }
+        return box;
+      }
+
+      // ---------- Extensions tab ----------
+      const cards = new Map();
+      function extensionPanel() {
+        const wrap = el('div', { className: 'ext' });
+        wrap.append(
+          el('p', { className: 'ext-intro', textContent:
+            'These demos run as Chrome / Firefox extensions. Start a server here, then load the built extension in your browser. The extensions call these fixed local ports.' }),
+        );
+        const grid = el('div', { className: 'cards' });
+        for (const app of exts()) {
+          const c = {
+            dot: el('span', { className: 'dot' }),
+            state: el('span', { className: 'state' }),
+            btn: el('button', { className: 'btn', type: 'button' }),
+            info: el('dl'),
+            logs: el('pre'),
+          };
+          c.btn.onclick = async () => {
+            c.btn.disabled = true;
+            const now = apps.find((a) => a.id === app.id).status;
+            const action = now === 'running' || now === 'starting' ? 'stop' : 'start';
+            await fetch(`/api/${action}/${app.id}`, { method: 'POST' });
+            await refresh();
+          };
+          const logs = el('details', {}, el('summary', { textContent: 'Server output' }), c.logs);
+          logs.ontoggle = () => logs.open && loadLogs(app.id, c.logs);
+          const install = el('details');
+          install.innerHTML = `<summary>Install the extension</summary>
+            <p><b>Chrome:</b> <code>chrome://extensions</code> → Developer mode → Load unpacked →<br><code>${app.card.dist}/chrome</code></p>
+            <p><b>${app.firefox}:</b> <code>about:debugging#/runtime/this-firefox</code> → Load Temporary Add-on →<br><code>${app.card.dist}/firefox/manifest.json</code></p>`;
+          const h = el('h3', {}, c.dot, app.card.name);
+          grid.append(
+            el('section', { className: 'card' },
+              h,
+              el('p', { textContent: app.card.blurb }),
+              el('div', { className: 'row' }, c.state, c.btn),
+              c.info,
+              install,
+              logs,
+            ),
+          );
+          cards.set(app.id, c);
+        }
+        wrap.append(grid);
+        return wrap;
+      }
+      function loadLogs(id, pre) {
+        fetch(`/api/logs/${id}`)
+          .then((r) => r.json())
+          .then((lines) => (pre.textContent = lines.slice(-40).join('\n') || '(no output yet)'));
+      }
+      function paintCards() {
+        for (const app of exts()) {
+          const c = cards.get(app.id);
+          if (!c) continue;
+          const on = app.status === 'running' || app.status === 'starting';
+          c.dot.className = 'dot ' + (app.status === 'stopped' ? '' : app.status);
+          c.state.textContent = label[app.status] ?? app.status;
+          c.btn.textContent = on ? 'Stop server' : 'Start server';
+          c.btn.className = 'btn' + (on ? ' stop' : '');
+          c.btn.disabled = app.status === 'stopping' || app.status === 'not-installed';
+          const rows = [
+            ['Endpoint', `127.0.0.1:${app.port}`],
+            ['Works on', app.sites],
+          ];
+          if (app.status === 'missing-key') rows.push(['Needs', app.missing.join(', ') + ' in .env']);
+          if (app.health) {
+            if ('mode' in app.health) rows.push(['Jev mode', app.health.mode]);
+            if ('configured' in app.health) rows.push(['Jev mode', app.health.configured ? 'LIVE' : 'API key missing']);
+            if (app.health.model) rows.push(['Model', app.health.model]);
+            for (const [k, v] of Object.entries(app.health))
+              if (!['mode', 'model', 'configured'].includes(k) && typeof v !== 'object') rows.push([k, String(v)]);
+          }
+          c.info.replaceChildren(...rows.flatMap(([k, v]) => [el('dt', { textContent: k }), el('dd', { textContent: v })]));
+          if (app.status === 'running') {
+            const dd = el('dd');
+            dd.append(el('a', { href: app.url, target: '_blank', rel: 'noopener', textContent: app.url + ' ↗' }));
+            c.info.append(el('dt', { textContent: 'Test page' }), dd);
+          }
+        }
+      }
+
+      // ---------- tabs ----------
+      function render() {
+        const ids = [...web().map((a) => a.id), ...(exts().length ? [EXT] : [])];
+        if (!ids.includes(current)) current = ids[0];
+        for (const b of $('tabs').children) b.setAttribute('aria-selected', b.dataset.id === current);
+        $('stage').querySelector('.notice')?.remove();
+        const isExt = current === EXT;
+        $('stage').querySelector('.ext').hidden = !isExt;
+        for (const n of ['reload', 'restart', 'open']) $(n).hidden = isExt;
+        for (const [id, f] of frames) f.hidden = id !== current;
+        if (isExt) {
+          $('blurb').textContent = 'Browser extension backends: start / stop servers and check their status.';
+          return paintCards();
+        }
+        const app = apps.find((a) => a.id === current);
+        $('blurb').textContent = app.blurb;
+        $('open').href = app.url;
+        if (app.status === 'running') {
+          if (!frames.has(app.id)) {
+            const f = el('iframe', { src: app.url, title: app.name, allow: 'clipboard-write' });
+            frames.set(app.id, f);
+            $('stage').append(f);
+          }
+        } else {
+          frames.get(app.id)?.remove();
+          frames.delete(app.id);
+          $('stage').append(notice(app));
+        }
+      }
+      function tab(id, name) {
+        const b = el('button', { role: 'tab' }, el('span', { className: 'dot' }), name);
+        b.dataset.id = id;
+        b.onclick = () => {
+          current = id;
+          history.replaceState(null, '', '#' + id);
+          render();
+        };
+        $('tabs').append(b);
+      }
+      function extDot() {
+        const st = exts().map((a) => a.status);
+        if (st.some((s) => ['error', 'missing-key', 'not-installed'].includes(s))) return 'error';
+        if (st.some((s) => s === 'starting' || s === 'stopping')) return 'starting';
+        return st.some((s) => s === 'running') ? 'running' : '';
+      }
+      async function refresh() {
+        const sig = (list) => JSON.stringify(list.map((a) => [a.id, a.status]));
+        const before = sig(web());
+        apps = await (await fetch('/api/apps')).json();
+        if (!$('tabs').children.length) {
+          web().forEach((a) => tab(a.id, a.name));
+          if (exts().length) {
+            tab(EXT, 'Extensions');
+            const panel = extensionPanel();
+            panel.hidden = true;
+            $('stage').append(panel);
+          }
+        }
+        for (const b of $('tabs').children)
+          b.querySelector('.dot').className =
+            'dot ' + (b.dataset.id === EXT ? extDot() : apps.find((a) => a.id === b.dataset.id).status);
+        paintCards();
+        if (before !== sig(web())) render();
+      }
+
+      $('reload').onclick = () => {
+        const f = frames.get(current);
+        if (f) f.src = f.src;
+        else render();
+      };
+      $('restart').onclick = async () => {
+        frames.get(current)?.remove();
+        frames.delete(current);
+        await fetch(`/api/restart/${current}`, { method: 'POST' });
+        apps.find((a) => a.id === current).status = 'starting';
+        render();
+      };
+      await refresh();
+      render();
+      setInterval(refresh, 2000);
+    </script>
+  </body>
+</html>

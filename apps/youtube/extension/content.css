@@ -1,0 +1,59 @@
+.yif-useful {
+  border-left: 3px solid #279b85 !important;
+  background: color-mix(in srgb, #39b59c 8%, transparent) !important;
+  padding: 14px !important;
+  border-radius: 8px !important;
+  box-sizing: border-box;
+}
+.yif-strong {
+  border-left-color: #b88931 !important;
+  background: color-mix(in srgb, #d7aa50 10%, transparent) !important;
+}
+.yif-dim {
+  opacity: 0.4;
+}
+.yif-dim:hover,
+.yif-dim:focus-within {
+  opacity: 1;
+}
+.yif-collapse {
+  display: none !important;
+}
+.yif-details {
+  color: var(--yt-spec-text-primary, #0f0f0f) !important;
+  font:
+    12px/1.6 system-ui,
+    sans-serif;
+  margin-bottom: 10px;
+}
+.yif-details summary {
+  cursor: pointer;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+}
+.yif-details pre {
+  font:
+    12px/1.7 ui-monospace,
+    monospace;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 380px;
+  overflow: auto;
+  padding: 12px;
+  background: color-mix(in srgb, currentColor 6%, transparent);
+  border-radius: 6px;
+}
+.yif-useful:focus {
+  outline: 2px solid #279b85;
+  outline-offset: 5px;
+}
+/* YouTube toggles html[dark] at runtime. Match the site theme rather than OS preference. */
+.yif-details summary,
+.yif-details pre {
+  color: inherit !important;
+}
+html[dark] .yif-details,
+body.dark .yif-details {
+  color: #fff !important;
+  color-scheme: dark;
+}

@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Headline Lens · Czytelnia</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #f7f6f0;
+        color: #273f36;
+        font: 14px/1.6 system-ui;
+      }
+      header,
+      main,
+      footer {
+        max-width: 1200px;
+        margin: auto;
+      }
+      header {
+        padding: 27px 32px 0;
+      }
+      .mast {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #bac4b6;
+        padding-bottom: 22px;
+      }
+      .brand {
+        font-size: 21px;
+        font-weight: 650;
+        letter-spacing: -1px;
+      }
+      .brand b {
+        background: #2c5140;
+        color: #edf2d3;
+        padding: 5px 10px;
+        border-radius: 8px;
+        margin-right: 9px;
+      }
+      .edition {
+        font-size: 10px;
+        letter-spacing: 1.5px;
+        color: #7e8778;
+      }
+      nav {
+        display: flex;
+        gap: 28px;
+        padding: 15px 0;
+        border-bottom: 1px solid #bac4b6;
+        font-size: 12px;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      nav a:first-child {
+        color: #3b7353;
+      }
+      main {
+        padding: 40px 32px;
+      }
+      .intro {
+        display: flex;
+        justify-content: space-between;
+        gap: 40px;
+        align-items: end;
+        margin-bottom: 32px;
+      }
+      .eyebrow {
+        font-size: 10px;
+        letter-spacing: 2px;
+        color: #71816c;
+      }
+      h1 {
+        font:
+          normal 54px/1.05 Georgia,
+          serif;
+        letter-spacing: -2px;
+        margin: 15px 0;
+      }
+      h1 em {
+        color: #61815c;
+      }
+      .intro p {
+        max-width: 500px;
+        color: #7c8375;
+        font-size: 13px;
+      }
+      .note {
+        max-width: 270px;
+        background: #edf0e2;
+        border: 1px solid #dae0ce;
+        border-radius: 8px;
+        padding: 18px;
+        font-size: 11px;
+      }
+      .note strong {
+        display: block;
+        letter-spacing: 0.5px;
+        margin-bottom: 7px;
+      }
+      .toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-block: 1px solid #cbd1c1;
+        padding: 13px 0;
+        margin-bottom: 0;
+        font-size: 11px;
+      }
+      .toolbar span {
+        color: #7d8978;
+      }
+      button {
+        background: #315840;
+        color: white;
+        border: 0;
+        border-radius: 5px;
+        padding: 9px 14px;
+        font: 11px system-ui;
+        cursor: pointer;
+      }
+      #news {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+      }
+      article {
+        padding: 25px 24px 24px 0;
+        border-bottom: 1px solid #d5dacb;
+        min-height: 230px;
+      }
+      article:not(:nth-child(3n)) {
+        border-right: 1px solid #d5dacb;
+        margin-right: 24px;
+      }
+      h2 {
+        font:
+          normal 24px/1.25 Georgia,
+          serif;
+        letter-spacing: -0.35px;
+        margin: 12px 0 7px;
+      }
+      article a:hover h2 {
+        color: #608359;
+      }
+      article p {
+        font-size: 11px;
+        color: #87907e;
+        margin: 9px 0 14px;
+      }
+      .section {
+        font-size: 9px;
+        letter-spacing: 1.2px;
+        color: #58714b;
+      }
+      .section span {
+        color: #9da591;
+      }
+      .byline {
+        font-size: 8px;
+        letter-spacing: 1px;
+        color: #8c9581;
+      }
+      footer {
+        padding: 20px 32px 40px;
+        font-size: 10px;
+        color: #8a947f;
+        display: flex;
+        justify-content: space-between;
+      }
+      #added {
+        font-size: 10px;
+        color: #567653;
+        margin-right: 14px;
+      }
+      @media (max-width: 750px) {
+        #news {
+          grid-template-columns: 1fr 1fr;
+        }
+        article:not(:nth-child(3n)) {
+          border-right: 0;
+          margin-right: 0;
+        }
+        .intro {
+          display: block;
+        }
+        .note {
+          max-width: none;
+        }
+        h1 {
+          font-size: 42px;
+        }
+      }
+      @media (max-width: 480px) {
+        #news {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="mast">
+        <a class="brand" href="/fixture"><b>◉</b> Headline Lens</a
+        ><span class="edition">CZYTELNIA &nbsp; / &nbsp; DEMO 01</span>
+      </div>
+      <nav>
+        <a href="/fixture">Dzisiejsze wydanie</a><a href="/polska">Polska</a
+        ><a href="/swiat">Świat</a><a href="/biznes">Biznes</a><a href="/kultura">Kultura</a>
+      </nav>
+    </header>
+    <main>
+      <div class="intro">
+        <div>
+          <span class="eyebrow">INNE SPOJRZENIE NA WIADOMOŚCI</span>
+          <h1>Przeczytaj nagłówek.<br /><em>Zauważ, jak jest napisany.</em></h1>
+          <p>
+            Fikcyjne wiadomości do wypróbowania Headline Lens. Przewijaj stronę i najedź na etykietę
+            przy nagłówku, aby zobaczyć, jak dobór słów wpływa na odbiór.
+          </p>
+        </div>
+        <div class="note">
+          <strong>ANALIZA STYLU NAGŁÓWKÓW</strong>Analiza opisuje sposób napisania nagłówka. Nie
+          sprawdza faktów ani nie ocenia poglądów politycznych. Wszystkie poniższe wiadomości są
+          fikcyjne.<br /><br />Włącz rozszerzenie, aby zobaczyć klasyfikację. Etykiety pochodzą z Jev na żywo (LIVE).
+        </div>
+      </div>
+      <div class="toolbar">
+        <div>DZISIAJ <span>&nbsp; / &nbsp; 24 nagłówki · 22 unikalne</span></div>
+        <div>
+          <span id="added" role="status"></span><button id="add">+ Wczytaj kolejne nagłówki</button>
+        </div>
+      </div>
+      <section id="news">
+        <article>
+          <span class="section">POLSKA <span>· 8:15</span></span
+          ><a href="/story/0"><h2>Polacy są w szoku. Tego nikt się nie spodziewał</h2></a>
+          <p>Wiadomości z kraju i najbliższej okolicy.</p>
+          <span class="byline">REDAKCJA &nbsp; / &nbsp; 3 MIN CZYTANIA</span>
+        </article>
+        <article>
+          <span class="section">GOSPODARKA <span>· 8:15</span></span
+          ><a href="/story/1"><h2>NBP opublikował nowe dane dotyczące inflacji</h2></a>
+          <p>Najważniejsze informacje dzisiejszego wydania.</p>
+          <span class="byline">REDAKCJA &nbsp; / &nbsp; 3 MIN CZYTANIA</span>
+        </article>
+        <article>
+          <span class="section">MIASTO <span>· 8:15</span></span
+          ><a href="/story/2"><h2>Alarm w Warszawie. Mieszkańcy są przerażeni</h2></a>
+          <p>Przegląd wydarzeń, które warto znać.</p>
+          <span class="byline">REDAKCJA &nbsp; / &nbsp; 3 MIN CZYTANIA</span>
+        </article>
+        <article>
+          <span class="section">SPOŁECZEŃSTWO <span>· 8:15</span></span
+          ><a href="/story/3"><h2>Skandal w radzie miasta. Radni znów się kłócą</h2></a>
+          <p>Wiadomości z kraju i najbliższej okolicy.</p>
+          <span class="byline">REDAKCJA &nbsp; / &nbsp; 3 MIN CZYTANIA</span>
+        </article>
+        <article>
+          <span class="section">POLSKA <span>· 9:15</span></span
+          ><a href="/story/4"><h2>Łzy radości po powrocie do rodzinnego domu</h2></a>
+          <p>Najważniejsze informacje dzisiejszego wydania.</p>
+          <span class="byline">REDAKCJA &nbsp; / &nbsp; 3 MIN CZYTANIA</span>
+        </article>
+        <article>
+          <span class="section">GOSPODARKA <span>· 9:15</span></span
+          ><a href="/story/5"><h2>Kup teraz. Specjalna promocja na nowe telefony</h2></a>
+          <p>Przegląd wydarzeń, które warto znać.</p>
+          <span class="byline">REDAKCJA &nbsp; / &nbsp; 3 MIN CZYTANIA</span>
+        </article>
+        <article>
+          <span class="section">MIASTO <span>· 9:15</span></span
+          ><a href="/story/6"><h2>Niesamowity rekord na zawodach w Krakowie</h2></a>
+          <p>Wiadomości z kraju i najbliższej okolicy.</p>
+          <span class="byline">REDAKCJA &nbsp; / &nbsp; 3 MIN CZYTANIA</span>
+        </article>
+        <article>
+          <span class="section">SPOŁECZEŃSTWO <span>· 9:15</span></span
+          ><a href="/story/7"><h2>Ten jeden szczegół zmienił wszystko. Sprawdź</h2></a>
+          <p>Najważniejsze informacje dzisiejszego wydania.</p>
+          <span class="byline">REDAKCJA &nbsp; / &nbsp; 3 MIN CZYTANIA</span>
+        </article>
+        <article>
+          <span class="section">POLSKA <span>· 10:15</span></span
+          ><a href="/story/8"><h2>PKP ogłosiły nowy rozkład pociągów na jesień</h2></a>
+          <p>Przegląd wydarzeń, które warto znać.</p>
+          <span class="byline">REDAKCJA &nbsp; / &nbsp; 3 MIN CZYTANIA</span>
+        </article>
+        <article>
+          <span class="section">GOSPODARKA <span>· 10:15</span></span
+          ><a href="/story/9"><h2>IMGW opublikował prognozę pogody na weekend</h2></a>
+          <p>Wiadomości z kraju i najbliższej okolicy.</p>
+          <span class="byline">REDAKCJA &nbsp; / &nbsp; 3 MIN CZYTANIA</span>
+        </article>
+        <article>
+          <span class="section">MIASTO <span>· 10:15</span></span
+          ><a href="/story/10"><h2>Nowa biblioteka miejska otwarta dla mieszkańców</h2></a>
+          <p>Najważniejsze informacje dzisiejszego wydania.</p>
+          <span class="byline">REDAKCJA &nbsp; / &nbsp; 3 MIN CZYTANIA</span>
+        </article>
+        <article>
+          <span class="section">SPOŁECZEŃSTWO <span>· 10:15</span></span
+          ><a href="/story/11"><h2>Nie uwierzysz, co znaleźli podczas remontu</h2></a>
+          <p>Przegląd wydarzeń, które warto znać.</p>
+          <span class="byline">REDAKCJA &nbsp; / &nbsp; 3 MIN CZYTANIA</span>
+        </article>
+        <article>
+          <span class="section">POLSKA <span>· 11:15</span></span
+          ><a href="/story/12"><h2>Ostrzeżenie przed silnym wiatrem. Pilny komunikat</h2></a>
+          <p>Wiadomości z kraju i najbliższej okolicy.</p>
+          <span class="byline">REDAKCJA &nbsp; / &nbsp; 3 MIN CZYTANIA</span>
+        </article>
+        <article>
+          <span class="section">GOSPODARKA <span>· 11:15</span></span
+          ><a href="/story/13"><h2>Afera wokół remontu. Mieszkańcy są oburzeni</h2></a>
+          <p>Najważniejsze informacje dzisiejszego wydania.</p>
+          <span class="byline">REDAKCJA &nbsp; / &nbsp; 3 MIN CZYTANIA</span>
+        </article>
+        <article>
+          <span class="section">MIASTO <span>· 11:15</span></span
+          ><a href="/story/14"><h2>Wzruszający list nauczycielki poruszył rodziców</h2></a>
+          <p>Przegląd wydarzeń, które warto znać.</p>
+          <span class="byline">REDAKCJA &nbsp; / &nbsp; 3 MIN CZYTANIA</span>
+        </article>
+        <article>
+          <span class="section">SPOŁECZEŃSTWO <span>· 11:15</span></span
+          ><a href="/story/15"><h2>Oferta sponsorowana: wybierz konto dla siebie</h2></a>
+          <p>Wiadomości z kraju i najbliższej okolicy.</p>
+          <span class="byline">REDAKCJA &nbsp; / &nbsp; 3 MIN CZYTANIA</span>
+        </article>
+        <article>
+          <span class="section">POLSKA <span>· 12:15</span></span
+          ><a href="/story/16"><h2>DRAMAT na stadionie! Zaskakujący finał meczu</h2></a>
+          <p>Najważniejsze informacje dzisiejszego wydania.</p>
+          <span class="byline">REDAKCJA &nbsp; / &nbsp; 3 MIN CZYTANIA</span>
+        </article>
+        <article>
+          <span class="section">GOSPODARKA <span>· 12:15</span></span
+          ><a href="/story/17"><h2>Uniwersytet ogłosił terminy rekrutacji na studia</h2></a>
+          <p>Przegląd wydarzeń, które warto znać.</p>
+          <span class="byline">REDAKCJA &nbsp; / &nbsp; 3 MIN CZYTANIA</span>
+        </article>
+        <article>
+          <span class="section">MIASTO <span>· 12:15</span></span
+          ><a href="/story/18"><h2>Rząd opublikował projekt ustawy w poniedziałek</h2></a>
+          <p>Wiadomości z kraju i najbliższej okolicy.</p>
+          <span class="byline">REDAKCJA &nbsp; / &nbsp; 3 MIN CZYTANIA</span>
+        </article>
+        <article>
+          <span class="section">SPOŁECZEŃSTWO <span>· 12:15</span></span
+          ><a href="/story/19"><h2>Oto co stanie się z twoimi oszczędnościami</h2></a>
+          <p>Najważniejsze informacje dzisiejszego wydania.</p>
+          <span class="byline">REDAKCJA &nbsp; / &nbsp; 3 MIN CZYTANIA</span>
+        </article>
+        <article>
+          <span class="section">POLSKA <span>· 13:15</span></span
+          ><a href="/story/20"><h2>Polacy są w szoku. Tego nikt się nie spodziewał</h2></a>
+          <p>Przegląd wydarzeń, które warto znać.</p>
+          <span class="byline">REDAKCJA &nbsp; / &nbsp; 3 MIN CZYTANIA</span>
+        </article>
+        <article>
+          <span class="section">GOSPODARKA <span>· 13:15</span></span
+          ><a href="/story/21"><h2>NBP opublikował nowe dane dotyczące inflacji</h2></a>
+          <p>Wiadomości z kraju i najbliższej okolicy.</p>
+          <span class="byline">REDAKCJA &nbsp; / &nbsp; 3 MIN CZYTANIA</span>
+        </article>
+        <article>
+          <span class="section">MIASTO <span>· 13:15</span></span
+          ><a href="/story/22"><h2>Muzeum otwiera wystawę fotografii XX wieku</h2></a>
+          <p>Najważniejsze informacje dzisiejszego wydania.</p>
+          <span class="byline">REDAKCJA &nbsp; / &nbsp; 3 MIN CZYTANIA</span>
+        </article>
+        <article>
+          <span class="section">SPOŁECZEŃSTWO <span>· 13:15</span></span
+          ><a href="/story/23"><h2>Miasto planuje budowę nowej ścieżki rowerowej</h2></a>
+          <p>Przegląd wydarzeń, które warto znać.</p>
+          <span class="byline">REDAKCJA &nbsp; / &nbsp; 3 MIN CZYTANIA</span>
+        </article>
+      </section>
+    </main>
+    <footer>
+      <span>HEADLINE LENS / LOKALNA WERSJA DEMONSTRACYJNA</span
+      ><a href="/privacy">Informacje o prywatności i zasadach serwisu</a
+      ><span>Kategorie definiowane podczas analizy. Bez osobnego treningu.</span>
+    </footer>
+    <script>
+      let count = 0;
+      document.querySelector('#add').onclick = () => {
+        const texts = [
+          'Tego nikt nie przewidział. Nowy zwrot wydarzeń w mieście',
+          'Polacy są w szoku. Tego nikt się nie spodziewał',
+          'Otwarto nową linię tramwajową w centrum miasta',
+        ];
+        for (const text of texts) {
+          const card = document.createElement('article');
+          const link = document.createElement('a');
+          link.href = '/dynamic/' + ++count;
+          const title = document.createElement('h2');
+          title.textContent = text;
+          link.append(title);
+          card.append(link);
+          document.querySelector('#news').append(card);
+        }
+        document.querySelector('#added').textContent = count + ' dodanych nagłówków';
+        document.querySelector('#news article:last-child').scrollIntoView({ behavior: 'instant' });
+      };
+    </script>
+  </body>
+</html>

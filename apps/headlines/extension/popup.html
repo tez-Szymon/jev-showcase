@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Headline Lens</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header>
+      <span class="logo">◉</span>
+      <div>
+        <h1>Headline Lens</h1>
+        <p>Spójrz na nagłówki z innej strony.</p>
+      </div>
+      <span class="version">01</span>
+    </header>
+    <main>
+      <section class="status">
+        <div>
+          <span class="eyebrow">CZYTAJ ŚWIADOMIE</span>
+          <h2 id="status">Analiza włączona</h2>
+        </div>
+        <label class="switch"
+          ><input type="checkbox" id="enabled" aria-label="Włącz Headline Lens" /><span></span
+        ></label>
+      </section>
+      <div class="connection">
+        <span id="dot"></span><span id="mode">Łączenie z Jev…</span
+        ><span class="local">LOKALNY SERWER</span>
+      </div>
+      <fieldset>
+        <legend>Analizuj</legend>
+        <label
+          ><span>Onet <small>onet.pl</small></span
+          ><input type="checkbox" id="onet" /></label
+        ><label
+          ><span>Wirtualna Polska <small>wp.pl</small></span
+          ><input type="checkbox" id="wp" /></label
+        ><label><span>Inne portale informacyjne</span><input type="checkbox" id="other" /></label>
+      </fieldset>
+      <fieldset>
+        <legend>Pokaż na stronie</legend>
+        <label><span>Kategorię</span><input type="checkbox" id="category" /></label
+        ><label><span>Pewność klasyfikacji</span><input type="checkbox" id="confidence" /></label
+        ><label
+          ><span>Nastawienie na kliknięcie <small>po najechaniu</small></span
+          ><input type="checkbox" id="score"
+        /></label>
+      </fieldset>
+      <div class="preview">
+        <span class="eyebrow">PODGLĄD ETYKIETY</span>
+        <div id="preview">LUKA CIEKAWOŚCI · 91%</div>
+      </div>
+      <label class="debug"
+        ><span>Tryb diagnostyczny <small>Kliknij etykietę, aby zobaczyć dane wyniku</small></span
+        ><input type="checkbox" id="debug"
+      /></label>
+      <button id="reanalyze">↻ &nbsp; Przeanalizuj ponownie</button>
+      <p id="message" role="status"></p>
+      <details>
+        <summary>Jak działa Headline Lens?</summary>
+        <p>
+          Osiem kategorii jest definiowanych w momencie analizy i ocenianych przez Jev. Nie
+          trenujemy dla nich osobnego klasyfikatora. Analiza dotyczy stylu nagłówka, a nie
+          prawdziwości informacji ani poglądów politycznych.
+        </p>
+        <p>
+          Tekst widocznych nagłówków trafia do lokalnego serwera. W trybie NA ŻYWO (LIVE) jest
+          następnie wysyłany do TypeSafe.
+        </p>
+      </details>
+    </main>
+    <footer><span>ANALIZA STYLU NAGŁÓWKÓW</span><span>Ocena przez Jev ↗</span></footer>
+    <script src="popup.js"></script>
+  </body>
+</html>

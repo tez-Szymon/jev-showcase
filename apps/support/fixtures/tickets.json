@@ -1,0 +1,37 @@
+[
+  {
+    "submissionId": "ed5605c7-0689-49f2-919f-b738c5770391",
+    "subject": "My internet drops out every evening",
+    "description": "Since Monday, my internet has been disconnecting every few minutes after 7 pm. Restarting the router did not help. Please check my connection."
+  },
+  {
+    "submissionId": "ed5605c7-0689-49f2-919f-b738c5770392",
+    "subject": "Duplicate charge on my bill",
+    "description": "My September bill includes the monthly subscription twice. Please correct the bill and refund the overpayment."
+  },
+  {
+    "submissionId": "ed5605c7-0689-49f2-919f-b738c5770393",
+    "subject": "Can I upgrade to a faster plan?",
+    "description": "I currently have the 300 Mbps plan. I would like to know the price and terms for upgrading to 1 Gbps at the same installation address."
+  },
+  {
+    "submissionId": "ed5605c7-0689-49f2-919f-b738c5770394",
+    "subject": "Changing my contact number",
+    "description": "I want to update the phone number used to contact me about my subscription. How can I do that?"
+  },
+  {
+    "submissionId": "ed5605c7-0689-49f2-919f-b738c5770395",
+    "subject": "Connection problem and a question about plans",
+    "description": "My internet keeps disconnecting. Please fix the connection. Equally important: please send me an offer for TV services and a new contract."
+  },
+  {
+    "submissionId": "ed5605c7-0689-49f2-919f-b738c5770396",
+    "subject": "Please help",
+    "description": "Something is not working and I do not know what to do. Please contact me."
+  },
+  {
+    "submissionId": "ed5605c7-0689-49f2-919f-b738c5770397",
+    "subject": "Exclusive investment opportunity",
+    "description": "Earn thousands without leaving home! Send money now to claim your guaranteed profit."
+  }
+]

@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hotdog or Not</title>
+<style>
+  :root {
+    --bg: #111214;
+    --panel: #1b1d21;
+    --ink: #f4f1ea;
+    --muted: #9a9ca3;
+    --mustard: #f5c518;
+    --ketchup: #e5322d;
+    --yes: #22c55e;
+    --no: #ef4444;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: ui-rounded, "SF Pro Rounded", system-ui, -apple-system, "Segoe UI", sans-serif;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 24px 16px 40px;
+  }
+  header { text-align: center; margin-bottom: 20px; }
+  h1 {
+    margin: 0; font-size: clamp(32px, 7vw, 56px); letter-spacing: -0.02em; font-weight: 900;
+  }
+  h1 .dog { color: var(--mustard); }
+  h1 .or { color: var(--muted); font-weight: 600; font-size: 0.55em; vertical-align: middle; margin: 0 .2em; }
+  h1 .not { color: var(--ketchup); }
+  header p { margin: 6px 0 0; color: var(--muted); font-size: 14px; }
+  header p b { color: var(--ink); font-weight: 600; }
+
+  .stage {
+    position: relative; width: min(560px, 100%); aspect-ratio: 1 / 1;
+    background: var(--panel); border-radius: 24px; overflow: hidden;
+    border: 2px dashed #34373e; display: grid; place-items: center;
+    transition: border-color .15s;
+  }
+  .stage.drag { border-color: var(--mustard); }
+  .stage.has-img { border-style: solid; border-color: transparent; }
+  .stage img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .empty { text-align: center; color: var(--muted); padding: 24px; }
+  .empty .big { font-size: 64px; line-height: 1; margin-bottom: 12px; }
+  .empty kbd { background: #2a2d33; color: var(--ink); border-radius: 6px; padding: 1px 6px; font-family: inherit; }
+
+  /* the verdict banner */
+  .verdict {
+    position: absolute; left: 0; right: 0; top: 0;
+    padding: 18px 16px 22px; text-align: center;
+    font-size: clamp(30px, 8vw, 52px); font-weight: 900; letter-spacing: -0.01em;
+    color: #fff; transform: translateY(-110%); transition: transform .35s cubic-bezier(.2,1.4,.4,1);
+    text-shadow: 0 2px 0 rgba(0,0,0,.2);
+  }
+  .verdict.show { transform: translateY(0); }
+  .verdict.yes { background: var(--yes); }
+  .verdict.no  { background: var(--no); }
+  .badge {
+    position: absolute; left: 50%; bottom: 28px; transform: translateX(-50%) scale(0);
+    width: 112px; height: 112px; border-radius: 50%; display: grid; place-items: center;
+    border: 6px solid #fff; transition: transform .35s cubic-bezier(.2,1.6,.4,1) .15s;
+    box-shadow: 0 8px 24px rgba(0,0,0,.35);
+  }
+  .badge.show { transform: translateX(-50%) scale(1); }
+  .badge.yes { background: var(--yes); }
+  .badge.no  { background: var(--no); }
+  .badge svg { width: 60px; height: 60px; stroke: #fff; stroke-width: 5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+
+  .scanning::after {
+    content: ""; position: absolute; left: 0; right: 0; height: 30%;
+    background: linear-gradient(to bottom, transparent, rgba(245,197,24,.45), transparent);
+    animation: scan 1.1s ease-in-out infinite alternate;
+  }
+  @keyframes scan { from { top: -30%; } to { top: 100%; } }
+  .status {
+    position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
+    background: rgba(0,0,0,.65); padding: 8px 14px; border-radius: 999px; font-size: 14px;
+    white-space: nowrap; display: none;
+  }
+  .scanning .status { display: block; }
+
+  .actions { display: flex; gap: 12px; margin-top: 18px; flex-wrap: wrap; justify-content: center; }
+  button, label.btn {
+    appearance: none; border: 0; cursor: pointer; font: inherit; font-weight: 700; font-size: 17px;
+    padding: 14px 22px; border-radius: 14px; background: var(--mustard); color: #1a1400;
+  }
+  button.ghost { background: #2a2d33; color: var(--ink); }
+  button:disabled { opacity: .5; cursor: default; }
+  input[type=file] { display: none; }
+
+  /* under the hood */
+  .hood { width: min(980px, 100%); margin-top: 22px; display: none; }
+  .hood.open { display: block; }
+  .hood-empty { color: var(--muted); text-align: center; font-size: 14px; padding: 18px; background: var(--panel); border-radius: 16px; }
+  .steps { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 760px) { .steps { grid-template-columns: 1fr; } }
+  .step { background: var(--panel); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
+  .step h3 { margin: 0; padding: 10px 14px; font-size: 13px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid #2a2d33; display: flex; gap: 8px; align-items: baseline; }
+  .step h3 .n { color: var(--mustard); }
+  .step h3 .sub { margin-left: auto; text-transform: none; letter-spacing: 0; font-weight: 400; font-variant-numeric: tabular-nums; }
+  .step pre { margin: 0; padding: 12px 14px; font: 12.5px/1.5 ui-monospace, "SF Mono", Menlo, monospace; white-space: pre-wrap; word-break: break-word; overflow: auto; max-height: 460px; }
+  .step.wide { grid-column: 1 / -1; }
+  .decision { padding: 14px; font: 15px/1.6 ui-monospace, "SF Mono", Menlo, monospace; }
+  .j-key { color: #8ab4f8; } .j-str { color: #a8d8a0; } .j-num { color: var(--mustard); font-weight: 700; }
+  .j-ref { color: #f0a0d0; } .j-lit { color: #c7a0f0; }
+  .hl { background: rgba(245,197,24,.18); border-radius: 4px; padding: 0 2px; }
+
+  .meta { margin-top: 14px; color: var(--muted); font-size: 13px; min-height: 1.2em; text-align: center; font-variant-numeric: tabular-nums; }
+  .err { color: #ff8a80; }
+</style>
+</head>
+<body>
+  <header>
+    <h1><span class="dog">Hotdog</span><span class="or">or</span><span class="not">Not</span></h1>
+    <p>One yes/no question, answered by <b>Jev</b> from TypeSafe</p>
+  </header>
+
+  <div class="stage" id="stage">
+    <div class="empty" id="empty">
+      <div class="big">🌭</div>
+      <div>Drop a photo here, paste one with <kbd>⌘V</kbd>,<br>or tap the button below</div>
+    </div>
+    <img id="preview" alt="" hidden>
+    <div class="verdict" id="verdict"></div>
+    <div class="badge" id="badge"></div>
+    <div class="status">Consulting Jev…</div>
+  </div>
+
+  <div class="actions">
+    <label class="btn" for="file">📷 Pick a photo</label>
+    <input type="file" id="file" accept="image/*" capture="environment">
+    <button class="ghost" id="again" hidden>Try another</button>
+    <button class="ghost" id="hoodToggle">🔍 How it works</button>
+  </div>
+  <div class="meta" id="meta"></div>
+
+  <section class="hood" id="hood">
+    <div class="hood-empty" id="hoodEmpty">Pick a photo to see the request sent to Jev and what comes back.</div>
+    <div class="steps" id="steps" hidden>
+      <div class="step">
+        <h3><span class="n">1</span> Request → Jev <span class="sub">POST /v1/systemone</span></h3>
+        <pre id="reqJson"></pre>
+      </div>
+      <div class="step">
+        <h3><span class="n">2</span> Response ← Jev <span class="sub" id="respMeta"></span></h3>
+        <pre id="respJson"></pre>
+      </div>
+      <div class="step wide">
+        <h3><span class="n">3</span> Decision in plain code</h3>
+        <div class="decision" id="decision"></div>
+      </div>
+    </div>
+  </section>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const stage = $("stage"), preview = $("preview"), empty = $("empty");
+const verdict = $("verdict"), badge = $("badge"), meta = $("meta");
+const showDetails = new URLSearchParams(location.search).has("debug");
+
+const CHECK = '<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg>';
+const CROSS = '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+
+// The TypeSafe API wants an upright PNG/JPEG, each side 280–1568 px.
+// Do that here so any phone photo, screenshot, WebP or HEIC-decoded image works.
+async function prepare(file) {
+  const bmp = await createImageBitmap(file, { imageOrientation: "from-image" });
+  const scale = Math.min(1, 1568 / Math.max(bmp.width, bmp.height));
+  const w = Math.round(bmp.width * scale), h = Math.round(bmp.height * scale);
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.max(w, 280);
+  canvas.height = Math.max(h, 280);
+  const ctx = canvas.getContext("2d");
+  ctx.fillStyle = "#fff";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(bmp, (canvas.width - w) / 2, (canvas.height - h) / 2, w, h);
+  bmp.close?.();
+  return new Promise((res) => canvas.toBlob(res, "image/jpeg", 0.9));
+}
+
+function reset() {
+  verdict.className = "verdict"; badge.className = "badge";
+  meta.textContent = ""; meta.classList.remove("err");
+  $("steps").hidden = true; $("hoodEmpty").hidden = false;
+  $("hoodEmpty").textContent = "Waiting for Jev…";
+}
+
+// --- "How it works" panel -------------------------------------------------
+const esc = (s) => s.replace(/[&<>]/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[ch]);
+function highlight(obj, refs = []) {
+  let html = esc(JSON.stringify(obj, null, 2)).replace(
+    /("(?:\\.|[^"\\])*")(\s*:)?|\b(-?\d+(?:\.\d+)?(?:e[+-]?\d+)?)\b|\b(true|false|null)\b/g,
+    (m, str, colon, num, lit) => {
+      if (str) {
+        if (colon) return `<span class="j-key">${str}</span>${colon}`;
+        const inner = str.slice(1, -1);
+        return refs.includes(inner) ? `<span class="j-ref" title="image reference">${str}</span>` : `<span class="j-str">${str}</span>`;
+      }
+      if (num) return `<span class="j-num">${num}</span>`;
+      return `<span class="j-lit">${lit}</span>`;
+    });
+  return html.replace(/(<span class="j-key">"noul"<\/span>: )(<span class="j-num">[^<]+<\/span>)/, '$1<span class="hl">$2</span>');
+}
+
+function renderTrace(data) {
+  const { request, response, requestId, ms } = data.trace;
+  const refs = Object.keys(request.assets || {});
+  $("reqJson").innerHTML = highlight(request, refs);
+  $("respJson").innerHTML = highlight(response, refs);
+  $("respMeta").textContent = `${ms} ms`;
+  $("respMeta").title = requestId || "";
+  const p = data.probability, yes = data.hotdog;
+  $("decision").innerHTML =
+    `<span class="j-key">p</span> = answers.is_hotdog.noul = <span class="j-num">${p.toFixed(3)}</span><br>` +
+    `<span class="j-num">${p.toFixed(3)}</span> ${yes ? "≥" : "<"} threshold <span class="j-num">${data.threshold}</span> ` +
+    `→ <b style="color:var(--${yes ? "yes" : "no"})">${yes ? "Hotdog!" : "Not hotdog!"}</b>`;
+  $("hoodEmpty").hidden = true; $("steps").hidden = false;
+}
+
+const hood = $("hood");
+function setHood(open) {
+  hood.classList.toggle("open", open);
+  $("hoodToggle").textContent = open ? "Hide details" : "🔍 How it works";
+  try { localStorage.setItem("hood", open ? "1" : "0"); } catch {}
+}
+$("hoodToggle").addEventListener("click", () => setHood(!hood.classList.contains("open")));
+let hoodPref = null;
+try { hoodPref = localStorage.getItem("hood"); } catch {}
+setHood(showDetails || hoodPref === "1");
+
+async function handle(file) {
+  if (!file || !file.type.startsWith("image/")) return;
+  reset();
+  $("again").hidden = true;
+  preview.src = URL.createObjectURL(file);
+  preview.hidden = false; empty.hidden = true;
+  stage.classList.add("has-img", "scanning");
+  try {
+    const blob = await prepare(file);
+    const r = await fetch("/api/classify", { method: "POST", headers: { "content-type": "image/jpeg" }, body: blob });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || r.statusText);
+    const yes = data.hotdog;
+    verdict.textContent = yes ? "Hotdog!" : "Not hotdog!";
+    badge.innerHTML = yes ? CHECK : CROSS;
+    // force reflow so the slide-in replays every time
+    void verdict.offsetWidth;
+    verdict.className = "verdict show " + (yes ? "yes" : "no");
+    badge.className = "badge show " + (yes ? "yes" : "no");
+    renderTrace(data);
+  } catch (e) {
+    meta.textContent = "Error: " + e.message; meta.classList.add("err");
+    $("hoodEmpty").textContent = "Request failed: " + e.message;
+  } finally {
+    stage.classList.remove("scanning");
+    $("again").hidden = false;
+  }
+}
+
+$("file").addEventListener("change", (e) => { handle(e.target.files[0]); e.target.value = ""; });
+$("again").addEventListener("click", () => $("file").click());
+stage.addEventListener("dragover", (e) => { e.preventDefault(); stage.classList.add("drag"); });
+stage.addEventListener("dragleave", () => stage.classList.remove("drag"));
+stage.addEventListener("drop", (e) => { e.preventDefault(); stage.classList.remove("drag"); handle(e.dataTransfer.files[0]); });
+document.addEventListener("paste", (e) => {
+  const item = [...e.clipboardData.items].find((i) => i.type.startsWith("image/"));
+  if (item) handle(item.getAsFile());
+});
+</script>
+</body>
+</html>

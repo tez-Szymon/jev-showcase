@@ -1,0 +1,98 @@
+:root {
+  color-scheme: light dark;
+  font: 13px/1.5 system-ui;
+  color: #e8eae6;
+  background: #151b1a;
+}
+body {
+  width: 350px;
+  margin: 0;
+}
+header {
+  display: flex;
+  gap: 12px;
+  padding: 24px 20px;
+  border-bottom: 1px solid #33413c;
+}
+.mark {
+  font-size: 30px;
+  color: #b9d5a3;
+}
+h1 {
+  font-size: 17px;
+  margin: 0;
+}
+small,
+footer {
+  color: #a7b5ae;
+}
+section {
+  padding: 18px 20px;
+  border-bottom: 1px solid #33413c;
+}
+h2 {
+  font-size: 15px;
+  margin: 0 0 14px;
+}
+.row {
+  display: flex;
+  justify-content: space-between;
+  margin: 12px 0;
+}
+input[type='range'] {
+  width: 100%;
+  accent-color: #b9d5a3;
+  margin: 18px 0;
+}
+input[type='checkbox'] {
+  accent-color: #b9d5a3;
+}
+output {
+  float: right;
+}
+select,
+button {
+  font: inherit;
+  color: inherit;
+  background: #25332d;
+  border: 1px solid #46594d;
+  border-radius: 7px;
+  padding: 9px;
+  cursor: pointer;
+}
+select {
+  display: block;
+  width: 100%;
+  margin: 8px 0 18px;
+}
+.stats {
+  display: flex;
+  gap: 55px;
+  margin: 22px 0;
+  color: #a7b5ae;
+}
+.stats b {
+  display: block;
+  font-size: 28px;
+  color: #d6e8c8;
+}
+#status {
+  color: #b9d5a3;
+}
+.top-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin: 8px 0;
+}
+.top-item small {
+  display: block;
+}
+footer {
+  padding: 18px 20px;
+  font-size: 11px;
+}
+button:focus-visible,
+select:focus-visible {
+  outline: 2px solid #d6e8c8;
+}

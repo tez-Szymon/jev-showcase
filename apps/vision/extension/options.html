@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="pl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Jev · filtr obrazów AI</title><link rel="stylesheet" href="options.css"></head>
+<body>
+  <main>
+    <span class="eyebrow">JEV / FILTR FEEDU</span>
+    <h1>Obrazy pod kontrolą.</h1>
+    <p>Analiza obrazów na Facebooku i LinkedInie.</p>
+    <form id="settings">
+      <label class="toggle"><span>Analizuj obrazy w feedzie</span><input id="enabled" type="checkbox"></label>
+      <label for="threshold">Próg prawdopodobieństwa AI <output id="value" for="threshold">80%</output></label>
+      <input id="threshold" type="range" min="0" max="100" step="1" value="80">
+      <div class="scale"><span>0%</span><span>100%</span></div>
+      <label for="mode">Po osiągnięciu progu</label>
+      <select id="mode"><option value="mark">Oznacz obraz etykietą</option><option value="hide">Ukryj obraz z opcją pokazania</option></select>
+      <button type="submit">Zapisz ustawienia</button>
+      <p id="status" role="status" aria-live="polite"></p>
+    </form>
+    <aside>Obrazy widoczne podczas przewijania są wysyłane przez lokalny serwer do TypeSafe. Teksty postów i dane konta nie są przesyłane. Ocena Jev może być błędna i nie jest dowodem pochodzenia obrazu.</aside>
+    <p class="server">Serwer analizy: <code>127.0.0.1:3000</code></p>
+    <p id="connection" role="status">Sprawdzanie połączenia…</p>
+  </main>
+  <script src="shared.js"></script><script src="options.js"></script>
+</body></html>

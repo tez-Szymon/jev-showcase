@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>LinkedIn: Detektor lania wody · Aktualności pod lupą.</title>
+    <link rel="stylesheet" href="/demo.css" />
+  </head>
+  <body>
+    <header class="top">
+      <a class="brand" href="/"
+        ><span class="logo">bs.</span>LinkedIn: Detektor lania wody<span class="demo"
+          >WERSJA DEMO</span
+        ></a
+      >
+      <div class="top-right">
+        <span class="status" id="mode">Łączenie z Jev…</span
+        ><a href="https://docs.typesafe.ai" target="_blank" rel="noreferrer">Analiza: TypeSafe ↗</a>
+      </div>
+    </header>
+    <main class="layout">
+      <aside class="sidebar">
+        <div class="eyebrow">CO KRYJE SIĘ W TWOIM FEEDZIE</div>
+        <h1>Mniej szumu.<br />Więcej <em>konkretów.</em></h1>
+        <p class="intro">Drugie spojrzenie na złote myśli w Twoich aktualnościach.</p>
+        <div class="controls">
+          <label class="switch-row"
+            >Wykrywanie włączone<input id="enabled" type="checkbox" checked role="switch"
+          /></label>
+          <div class="rule"></div>
+          <label for="sensitivity">Czułość <output id="level">Umiarkowana</output></label
+          ><input id="sensitivity" type="range" min="0" max="100" value="50" />
+          <div class="range-ends"><span>Łagodna</span><span>Surowa</span></div>
+          <div class="rule"></div>
+          <div class="eyebrow">PRZY TWOICH POSTACH</div>
+          <label>Wskaźnik lania wody<input id="meter" type="checkbox" checked /></label
+          ><label>Oceny szczegółowe<input id="details" type="checkbox" checked /></label
+          ><label>Etykiety treści<input id="labels" type="checkbox" checked /></label>
+          <div class="rule"></div>
+          <label for="minLength"
+            >Minimum znaków<input
+              id="minLength"
+              type="number"
+              min="0"
+              max="3000"
+              value="120" /></label
+          ><button class="refresh" id="reanalyze">↻ Oceń widoczne posty ponownie</button>
+        </div>
+        <p class="privacy">Analizujemy tylko tekst posta.<br />Nie oceniamy ludzi.</p>
+        <div class="powered">OCENA TREŚCI<br /><strong>Jev</strong><span> / TypeSafe AI</span></div>
+      </aside>
+      <section class="feed-column">
+        <div class="feed-heading">
+          <div>
+            <span class="eyebrow">EKSPERYMENT</span>
+            <h2>Aktualności pod lupą.</h2>
+          </div>
+          <span class="sample-count">Przykładowe posty: 12</span>
+        </div>
+        <div class="notice">
+          <span>✳</span>
+          <div>
+            <strong>Z humorem, ale według jasnych zasad.</strong>
+            <p>Rozwiń wskaźnik, aby zobaczyć składniki oceny. Te posty są fikcyjne.</p>
+          </div>
+        </div>
+        <div id="feed"></div>
+        <button id="load-more" class="load-more">＋ Dodaj kolejne posty</button>
+        <p class="end-note">Przewijanie bez końca. Za to z dystansem.</p>
+      </section>
+      <aside class="guide">
+        <div class="guide-card">
+          <div class="eyebrow">JAK CZYTAĆ WYNIKI</div>
+          <h3>Skala lania wody</h3>
+          <div class="spectrum"></div>
+          <div class="range-ends">
+            <span>0% · same konkrety</span><span>100% · samo lanie wody</span>
+          </div>
+          <ul>
+            <li>
+              <i class="green"></i>
+              <div>
+                <strong>0–20 · Zaskakująco przydatne</strong>
+                <p>Szczegóły. Przykłady. Coś do wykorzystania.</p>
+              </div>
+            </li>
+            <li>
+              <i class="olive"></i>
+              <div>
+                <strong>21–40 · Głównie konkrety</strong>
+                <p>Przydatna myśl, lekko podkolorowana.</p>
+              </div>
+            </li>
+            <li>
+              <i class="yellow"></i>
+              <div>
+                <strong>41–60 · LinkedInowa równowaga</strong>
+                <p>Trochę treści, trochę przedstawienia.</p>
+              </div>
+            </li>
+            <li>
+              <i class="orange"></i>
+              <div>
+                <strong>61–80 · Energia lidera opinii</strong>
+                <p>Dużo inspiracji. Mało konkretów.</p>
+              </div>
+            </li>
+            <li>
+              <i class="red"></i>
+              <div>
+                <strong>81–100 · Krytyczny poziom synergii</strong>
+                <p>Uwaga, nadciąga zmiana paradygmatu.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="method">
+          <span class="eyebrow">SKĄD TEN WYNIK</span>
+          <h3>Subiektywna ocena.<br />Jawny wzór.</h3>
+          <p>Jev ocenia konkretność, praktyczność, autopromocję, banały i użyteczne myśli.</p>
+          <p>Kod przelicza te oceny na wynik. Ty ustawiasz czułość.</p>
+          <span class="pill">5 ocen → 1 wskaźnik</span>
+        </div>
+        <p class="footnote">
+          Demo oceny stylu, bez weryfikacji faktów.<br />Projekt niezależny od LinkedIna.
+        </p>
+      </aside>
+    </main>
+    <script src="/fixture.js"></script>
+  </body>
+</html>

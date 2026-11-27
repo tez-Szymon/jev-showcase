@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Image References</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--ink:#14171c;--muted:#5d6672;--line:#e2e5ea;--accent:#4f46e5;--accent-soft:#eef0ff;--good:#18864b;--bad:#b42318;--chip:#fff7e0;--chip-line:#f0c96a}
+@media (prefers-color-scheme:dark){:root{--bg:#111318;--card:#1a1d24;--ink:#e9ecf1;--muted:#9aa3af;--line:#2c313b;--accent:#8b85ff;--accent-soft:#25264a;--good:#4cc38a;--bad:#ff7a6e;--chip:#3a3018;--chip-line:#7a6326}}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:1280px;margin:0 auto;padding:24px 16px 48px}
+h1{font-size:24px;margin:0 0 4px}
+.sub{color:var(--muted);margin:0 0 20px;max-width:820px}
+.modes{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
+.mode{text-align:left;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:12px 14px;cursor:pointer;color:inherit;font:inherit}
+.mode b{display:block;font-size:15px}
+.mode span{color:var(--muted);font-size:13px}
+.mode small{display:inline-block;margin-bottom:4px;font-size:11px;letter-spacing:.06em;font-weight:700;color:var(--accent)}
+.mode[aria-pressed=true]{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:16px;align-items:start}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+.card h2{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.presets{margin-bottom:14px}
+button.btn{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit}
+button.btn:hover{border-color:var(--accent)}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600;padding:9px 18px}
+button:disabled{opacity:.5;cursor:default}
+.photo{display:flex;gap:14px;align-items:flex-start;margin-bottom:14px}
+.drop{width:150px;height:150px;flex:none;border:2px dashed var(--line);border-radius:12px;display:grid;place-items:center;text-align:center;color:var(--muted);cursor:pointer;overflow:hidden;background:var(--bg);font-size:12px;padding:6px}
+.drop img{width:100%;height:100%;object-fit:contain}
+.drop.over{border-color:var(--accent)}
+label.f{display:block;font-weight:600;margin:0 0 4px}
+textarea,input[type=text]{width:100%;border:1px solid var(--line);border-radius:8px;padding:8px;background:var(--bg);color:var(--ink);font:inherit}
+textarea{min-height:92px;resize:vertical}
+.hint{color:var(--muted);font-size:12px;margin:4px 0 0}
+code{background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:0 4px;font-size:12px}
+.refs{display:grid;gap:10px;margin:8px 0 10px}
+.ref{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:8px}
+.ref .drop{width:76px;height:76px;border-width:1px}
+.ref .fields{flex:1;display:grid;gap:6px;min-width:0}
+.ref .num{font-weight:700;color:var(--accent);width:22px;text-align:center}
+.ref .tools{display:flex;flex-direction:column;gap:4px}
+.ref .tools button{padding:2px 7px}
+.run{display:flex;gap:12px;align-items:center;margin-top:14px}
+.error{color:var(--bad);margin:10px 0 0}
+.empty{color:var(--muted)}
+.result-head{display:flex;justify-content:space-between;gap:12px;align-items:baseline;margin-bottom:10px;flex-wrap:wrap}
+.verdict{font-size:20px;font-weight:700}
+.meta{color:var(--muted);font-size:12px}
+.bar{display:grid;grid-template-columns:44px minmax(0,1fr) 54px;gap:10px;align-items:center;margin:6px 0}
+.bar img{width:44px;height:44px;object-fit:contain;border:1px solid var(--line);border-radius:6px;background:#fff}
+.bar .ph{width:44px;height:44px;border:1px dashed var(--line);border-radius:6px}
+.bar .name{font-size:13px;margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.track{height:10px;background:var(--bg);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.fill{height:100%;background:var(--accent)}
+.bar.win .fill{background:var(--good)}
+.bar.win .name{font-weight:700}
+.pct{text-align:right;font-variant-numeric:tabular-nums}
+.scale{position:relative;height:12px;margin:18px 0 6px;background:linear-gradient(90deg,#d33,#e8c02a,#3aa655);border-radius:6px}
+.scale i{position:absolute;top:-6px;width:4px;height:24px;background:var(--ink);border-radius:2px;transform:translateX(-2px)}
+pre{margin:0;white-space:pre-wrap;word-break:break-word;font:12px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;max-height:520px;overflow:auto;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px}
+.ref-chip{display:inline-flex;align-items:center;gap:4px;vertical-align:middle;background:var(--chip);border:1px solid var(--chip-line);border-radius:6px;padding:1px 5px 1px 1px;font-family:system-ui,sans-serif;font-size:11px;font-weight:600}
+.ref-chip img{width:26px;height:26px;object-fit:cover;border-radius:4px;background:#fff}
+.wire summary{cursor:pointer;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:18px 0 8px}
+.wire .stats{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 8px}
+.wire .stats span{background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:2px 9px;font-size:12px}
+.wire pre{max-height:640px}
+.wire .k{color:var(--accent);font-weight:600}
+.wire .b{color:var(--muted)}
+.wire .bin{display:inline-block;background:var(--accent-soft);border:1px dashed var(--accent);border-radius:6px;padding:4px 8px;margin:2px 0;white-space:normal}
+.wire .res{border-top:1px dashed var(--line);margin-top:10px;padding-top:10px;display:block}
+.where{margin:0 0 10px;padding:8px 10px;border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 8px 8px 0;font-size:13px}
+.boxed{position:relative;display:inline-block;max-width:100%;margin:4px 0 10px;line-height:0}
+.boxed img{max-width:100%;border-radius:8px;border:1px solid var(--line)}
+.bbox{position:absolute;border:3px solid var(--c);border-radius:4px;box-shadow:0 0 0 1px #0006}
+.bbox.absent{border-style:dashed;opacity:.55}
+.bbox b{position:absolute;left:-3px;bottom:100%;background:var(--c);color:#fff;font:600 11px/1.6 system-ui,sans-serif;padding:0 5px;border-radius:4px 4px 0 0;white-space:nowrap}
+.swatch{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:middle}
+@media (max-width:1100px){.modes{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:900px){.grid,.modes{grid-template-columns:1fr}}
+@media (max-width:520px){.photo{flex-direction:column}}
+</style>
+</head>
+<body>
+<main>
+  <h1>Pictures inside the question</h1>
+  <p class="sub">With Jev, an image can go anywhere text can: in the state, inside a question's <b>instructions</b>, and inside its <b>criteria</b>. Pick a pattern, try a preset or upload your own photos, then look at the request to see where each picture went.</p>
+
+  <div class="modes" role="group" aria-label="Pattern">
+    <button class="mode" data-mode="match"><small>IMAGE IN INSTRUCTIONS</small><b>Compare with a reference</b><span>Noul: "Is this the same thing as this picture: ▣?" One question per reference.</span></button>
+    <button class="mode" data-mode="choice"><small>IMAGES IN CRITERIA</small><b>Options defined by example</b><span>Choice: each option is a picture, not a description.</span></button>
+    <button class="mode" data-mode="find"><small>IMAGE IN BOX INSTRUCTIONS</small><b>Find this picture</b><span>Box: "where in the photo is the thing in this picture: ▣?" plus a Noul for whether it's there.</span></button>
+    <button class="mode" data-mode="score"><small>IMAGES IN CRITERIA</small><b>Score levels by example</b><span>Score: an ordered rubric where each level is a picture.</span></button>
+  </div>
+
+  <div class="grid">
+    <section class="card">
+      <div class="row presets" id="presets"></div>
+      <div class="photo">
+        <div class="drop" id="photo" tabindex="0" aria-label="Photo to judge">Drop, paste or click to add the photo</div>
+        <div style="flex:1;min-width:0">
+          <label class="f" for="instructions">Instructions</label>
+          <textarea id="instructions"></textarea>
+          <p class="hint" id="instr-hint"></p>
+        </div>
+      </div>
+      <h2 id="refs-title">References</h2>
+      <div class="refs" id="refs"></div>
+      <div class="row">
+        <button class="btn" id="add">+ Add pictures</button>
+        <label class="row" id="none-wrap" style="gap:6px"><input type="checkbox" id="none"> Add a "none of these" option</label>
+      </div>
+      <div class="run">
+        <button class="btn primary" id="run">Ask Jev</button>
+        <span class="meta" id="status"></span>
+      </div>
+      <p class="error" id="error" role="alert" hidden></p>
+    </section>
+
+    <section class="card" id="out">
+      <h2>Result</h2>
+      <p class="empty" id="result-empty">Run a question to see Jev's answer and the exact request.</p>
+      <div id="result"></div>
+      <div id="request" hidden>
+        <h2 style="margin-top:18px">Request as sent</h2>
+        <p class="where" id="where"></p>
+        <pre id="json"></pre>
+        <details class="wire" id="wire-box" open>
+          <summary>Raw HTTP log</summary>
+          <p class="hint" style="margin-top:0">What the SDK actually sent and received, recorded by wrapping its <code>fetch</code>. The body is shown after decompression; binary image parts are summarised (size and first bytes). The API key is redacted.</p>
+          <div id="wire"></div>
+        </details>
+        <p class="hint">Highlighted strings are image references. The bytes travel once in the request's <code>assets</code>; the model sees the picture wherever its reference appears. The <code>TypeSafe-Danger-Zone-Images: true</code> header turns images on.</p>
+      </div>
+    </section>
+  </div>
+  <input type="file" id="file" accept="image/png,image/jpeg,image/webp" multiple hidden>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+const MODES = {
+  match: {
+    title: "Reference pictures",
+    hint: "Put <code>{reference}</code> where the picture goes. <code>{label}</code> is replaced by the reference's label. Jev asks one yes/no question per reference.",
+    instructions: "Does `photo` show the same thing as this reference picture: {reference}? Ignore size, angle, background and lighting.",
+    where: "Each reference picture is inside one Noul's <b>instructions</b> sentence, so it is sent only with that question. The photo is in the <b>state</b>.",
+  },
+  choice: {
+    title: "Options (label + example picture)",
+    hint: "The labels are what your code gets back. Jev compares the photo with each option's picture; the description is optional.",
+    instructions: "Which of the options matches what `photo` shows? Each option is defined by an example picture.",
+    where: "Each option in the Choice's <b>criteria</b> is a picture (with an optional description). The option names stay text: they are what your code receives.",
+  },
+  find: {
+    title: "What to find (one box per picture)",
+    hint: "Put <code>{reference}</code> where the picture goes. Each picture gets a Box (where is it?) and a Noul (is it there at all?), because a Box always returns a box, even for something that's missing.",
+    instructions: "the thing in `photo` that matches this picture: {reference}",
+    where: "Each target picture sits inside a Box question's <b>instructions</b>, and again inside a Noul that checks it is present. The photo to search is in the <b>state</b>.",
+  },
+  score: {
+    title: "Score levels, lowest first",
+    hint: "Order matters: level 0 is first. The score can land between levels.",
+    instructions: "Which example level is `photo` closest to?",
+    where: "Each level of the Score's <b>criteria</b> rubric is a picture. Answers repeat the reference string in the <code>legend</code>, not the image.",
+  },
+};
+let mode = "match";
+let photo = null;
+const drafts = { match: [], choice: [], score: [], find: [] };
+let presets = [];
+let pickTarget = null;
+
+// Downscale in the browser so uploads stay small; the server does the final resize.
+function toDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const k = Math.min(1, 1568 / Math.max(img.naturalWidth, img.naturalHeight));
+      const c = document.createElement("canvas");
+      c.width = Math.round(img.naturalWidth * k);
+      c.height = Math.round(img.naturalHeight * k);
+      const g = c.getContext("2d");
+      g.fillStyle = "#fff";
+      g.fillRect(0, 0, c.width, c.height);
+      g.drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(img.src);
+      resolve(c.toDataURL("image/jpeg", 0.9));
+    };
+    img.onerror = () => reject(new Error("Could not read that image."));
+    img.src = URL.createObjectURL(file);
+  });
+}
+const baseName = (f) => f.name.replace(/\.[^.]+$/, "").replace(/[^\w-]+/g, "_").slice(0, 40) || "ref";
+
+function setDrop(el, dataUrl, empty) {
+  el.innerHTML = dataUrl ? `<img alt="" src="${dataUrl}">` : empty;
+}
+function bindDrop(el, onFiles) {
+  el.addEventListener("click", () => { pickTarget = onFiles; $("file").click(); });
+  el.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); el.click(); } });
+  el.addEventListener("dragover", (e) => { e.preventDefault(); el.classList.add("over"); });
+  el.addEventListener("dragleave", () => el.classList.remove("over"));
+  el.addEventListener("drop", (e) => { e.preventDefault(); el.classList.remove("over"); onFiles([...e.dataTransfer.files]); });
+}
+$("file").addEventListener("change", (e) => { const files = [...e.target.files]; e.target.value = ""; pickTarget?.(files); });
+
+async function setPhoto(files) {
+  const f = files.find((x) => x.type.startsWith("image/"));
+  if (!f) return;
+  photo = await toDataUrl(f);
+  setDrop($("photo"), photo);
+}
+bindDrop($("photo"), setPhoto);
+document.addEventListener("paste", (e) => {
+  const files = [...(e.clipboardData?.files ?? [])];
+  if (files.length && !e.target.closest("textarea,input")) setPhoto(files);
+});
+
+async function addRefs(files) {
+  for (const f of files.filter((x) => x.type.startsWith("image/")).slice(0, 8 - drafts[mode].length))
+    drafts[mode].push({ label: baseName(f), description: "", image: await toDataUrl(f) });
+  renderRefs();
+}
+$("add").addEventListener("click", () => { pickTarget = addRefs; $("file").click(); });
+
+function renderRefs() {
+  const list = drafts[mode];
+  $("refs").innerHTML = list.length ? "" : `<p class="empty">No pictures yet. Add some or load a preset.</p>`;
+  list.forEach((r, i) => {
+    const el = document.createElement("div");
+    el.className = "ref";
+    el.innerHTML = `${mode === "score" ? `<span class="num">${i}</span>` : ""}
+      <div class="drop" tabindex="0" aria-label="Picture ${i + 1}"></div>
+      <div class="fields">
+        <input type="text" aria-label="Label" placeholder="label" value="${esc(r.label)}">
+        <input type="text" aria-label="Description (optional)" placeholder="description (optional)" value="${esc(r.description)}">
+      </div>
+      <div class="tools">
+        ${mode === "score" ? `<button class="btn" data-a="up" aria-label="Move up" ${i ? "" : "disabled"}>↑</button><button class="btn" data-a="down" aria-label="Move down" ${i < list.length - 1 ? "" : "disabled"}>↓</button>` : ""}
+        <button class="btn" data-a="del" aria-label="Remove">✕</button>
+      </div>`;
+    const drop = el.querySelector(".drop");
+    setDrop(drop, r.image);
+    bindDrop(drop, async (files) => { const f = files[0]; if (f) { r.image = await toDataUrl(f); setDrop(drop, r.image); } });
+    const [label, desc] = el.querySelectorAll("input");
+    label.addEventListener("input", () => (r.label = label.value));
+    desc.addEventListener("input", () => (r.description = desc.value));
+    el.querySelector(".tools").addEventListener("click", (e) => {
+      const a = e.target.closest("button")?.dataset.a;
+      if (a === "del") list.splice(i, 1);
+      if (a === "up") [list[i - 1], list[i]] = [list[i], list[i - 1]];
+      if (a === "down") [list[i + 1], list[i]] = [list[i], list[i + 1]];
+      if (a) renderRefs();
+    });
+    $("refs").append(el);
+  });
+  $("add").disabled = list.length >= 8;
+}
+
+const instructions = Object.fromEntries(Object.entries(MODES).map(([k, v]) => [k, v.instructions]));
+$("instructions").addEventListener("input", () => (instructions[mode] = $("instructions").value));
+
+function setMode(m) {
+  mode = m;
+  document.querySelectorAll(".mode").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.mode === m)));
+  $("refs-title").textContent = MODES[m].title;
+  $("instr-hint").innerHTML = MODES[m].hint;
+  $("instructions").value = instructions[m];
+  $("none-wrap").hidden = m !== "choice";
+  $("presets").innerHTML = `<span class="meta">Preset:</span>` +
+    presets.filter((p) => p.mode === m).map((p) => `<button class="btn" data-p="${p.id}">${esc(p.title)}</button>`).join("");
+  renderRefs();
+}
+document.querySelectorAll(".mode").forEach((b) => b.addEventListener("click", () => setMode(b.dataset.mode)));
+$("presets").addEventListener("click", (e) => {
+  const p = presets.find((x) => x.id === e.target.dataset.p);
+  if (!p) return;
+  photo = p.query;
+  setDrop($("photo"), photo);
+  instructions[mode] = p.instructions;
+  $("instructions").value = p.instructions;
+  $("none").checked = !!p.none;
+  drafts[mode] = p.refs.map((r) => ({ ...r }));
+  renderRefs();
+});
+
+const pct = (x) => `${Math.round(x * 100)}%`;
+function bar(name, thumb, value, win) {
+  return `<div class="bar${win ? " win" : ""}">${thumb ? `<img alt="" src="${thumb}">` : `<span class="ph"></span>`}
+    <div><div class="name">${esc(name)}</div><div class="track"><div class="fill" style="width:${value * 100}%"></div></div></div>
+    <span class="pct">${pct(value)}</span></div>`;
+}
+
+const COLORS = ["#e5484d", "#3e63dd", "#30a46c", "#f76b15", "#8e4ec6", "#0090ff", "#d6409f", "#978365"];
+function renderResult(r, refs, photoUrl) {
+  const thumbs = refs.map((x) => x.image);
+  const meta = `<span class="meta">${esc(r.model)} · ${r.ms} ms · ${r.usage?.input_tokens ?? "?"} input tokens</span>`;
+  let html = "";
+  if (r.mode === "match") {
+    const rows = r.labels.map((l, i) => ({ l, p: r.answers[`ref_${i + 1}`].noul, t: thumbs[i] }));
+    const best = rows.reduce((a, b) => (b.p > a.p ? b : a));
+    html = `<div class="result-head"><span class="verdict">${best.p >= 0.5 ? `Same as “${esc(best.l)}”` : "No reference matches"}</span>${meta}</div>
+      <p class="hint" style="margin-top:0">Probability that the photo shows the same thing as each reference (one Noul each).</p>` +
+      rows.map((x) => bar(x.l, x.t, x.p, x === best && x.p >= 0.5)).join("");
+  } else if (r.mode === "choice") {
+    const a = r.answers.result;
+    const rows = Object.entries(a.probabilities).sort((x, y) => y[1] - x[1]);
+    html = `<div class="result-head"><span class="verdict">${esc(a.choice)}</span>${meta}</div>
+      <p class="hint" style="margin-top:0">Confidence ${pct(a.confidence)}. Probabilities across the options:</p>` +
+      rows.map(([l, p]) => bar(l, thumbs[r.labels.indexOf(l)], p, l === a.choice)).join("");
+  } else if (r.mode === "find") {
+    const rows = r.labels.map((l, i) => ({ l, i, p: r.answers[`present_${i + 1}`].noul, a: r.answers[`box_${i + 1}`] }));
+    const found = rows.filter((x) => x.p >= 0.5);
+    const boxes = rows.map(({ l, i, p, a: { box: b } }) =>
+      `<div class="bbox${p >= 0.5 ? "" : " absent"}" style="--c:${COLORS[i % COLORS.length]};left:${b.left * 100}%;top:${b.top * 100}%;width:${(b.right - b.left) * 100}%;height:${(b.bottom - b.top) * 100}%"><b>${esc(l)}</b></div>`).join("");
+    html = `<div class="result-head"><span class="verdict">Found ${found.length} of ${rows.length}</span>${meta}</div>
+      <div class="boxed"><img alt="Photo with boxes" src="${photoUrl}">${boxes}</div>
+      <p class="hint" style="margin-top:0">Bars: probability that each target is in the photo. Dashed boxes are where Jev would point if it had to, for targets it thinks are absent.</p>` +
+      rows.map((x) => bar(x.l, thumbs[x.i], x.p, x.p >= 0.5).replace('<div class="name">', `<div class="name"><span class="swatch" style="background:${COLORS[x.i % COLORS.length]}"></span>`) +
+        `<p class="meta" style="margin:-2px 0 6px 54px">box confidence ${pct(x.a.confidence)} · top ${x.a.box.top.toFixed(2)} left ${x.a.box.left.toFixed(2)} bottom ${x.a.box.bottom.toFixed(2)} right ${x.a.box.right.toFixed(2)}</p>`).join("");
+  } else {
+    const a = r.answers.result;
+    const n = r.labels.length - 1;
+    html = `<div class="result-head"><span class="verdict">Score ${a.score.toFixed(2)} of ${n}</span>${meta}</div>
+      <p class="hint" style="margin-top:0">Closest level: “${esc(r.labels[Math.round(a.score)])}”. Confidence ${pct(a.confidence)}.</p>
+      <div class="scale"><i style="left:${(a.score / n) * 100}%"></i></div>` +
+      r.labels.map((l, i) => bar(`${i} · ${l}`, thumbs[i], a.probabilities[i] ?? 0, i === Math.round(a.score))).join("");
+  }
+  $("result").innerHTML = html;
+  $("result-empty").hidden = true;
+
+  // Pretty JSON with every image reference shown as a labelled thumbnail chip.
+  $("json").innerHTML = chips(esc(JSON.stringify(r.sent, null, 2)), r.assets);
+  $("wire").innerHTML = (r.wire ?? []).map((x) => renderWire(x, r.assets)).join("");
+  $("where").innerHTML = MODES[r.mode].where;
+  $("request").hidden = false;
+}
+
+const chip = (ref, a) => `<span class="ref-chip" title="${esc(ref)}"><img alt="" src="${a.thumb}">${esc(a.name)}</span>`;
+// literal: keep the exact reference text (raw log) and add the thumbnail beside it.
+const litChip = (ref, a) => `<span class="ref-chip" title="${esc(a.name)}"><img alt="" src="${a.thumb}">${esc(ref)}</span>`;
+function chips(escaped, assets, literal = false) {
+  for (const [ref, a] of Object.entries(assets)) escaped = escaped.split(esc(ref)).join((literal ? litChip : chip)(ref, a));
+  return escaped;
+}
+const kb = (n) => (n < 1024 ? `${n} B` : `${(n / 1024).toFixed(1)} KB`);
+
+// One HTTP exchange, laid out like a raw dump: request line, headers, the multipart
+// body part by part, then the response.
+function renderWire(x, assets) {
+  const head = (lines) => lines.map((l) => { const i = l.indexOf(":"); return i < 0 ? esc(l) : `<span class="k">${esc(l.slice(0, i))}</span>${esc(l.slice(i))}`; }).join("\n");
+  // The JSON part's "assets" map says which file part holds which reference.
+  let partToRef = {};
+  const reqPart = x.parts?.find((p) => p.name === "request");
+  try { for (const [ref, a] of Object.entries(JSON.parse(reqPart?.text ?? "{}").assets ?? {})) if (a.part) partToRef[a.part] = ref; } catch {}
+  let body;
+  if (x.parts) {
+    body = x.parts.map((p) => {
+      const content = p.kind === "text"
+        ? chips(esc(p.text), assets, true)
+        : `<span class="bin">‹ ${p.bytes.toLocaleString()} bytes of binary image data · starts <code>${esc(p.head)}</code>${partToRef[p.name] && assets[partToRef[p.name]] ? ` · this part is ${chip(partToRef[p.name], assets[partToRef[p.name]])}` : ""} ›</span>`;
+      return `<span class="b">--${esc(x.boundary)}</span>\n${head(p.headers)}\n\n${content}`;
+    }).join("\n") + `\n<span class="b">--${esc(x.boundary)}--</span>`;
+  } else body = chips(esc(x.text ?? ""), assets, true);
+  const reqHead = head(Object.entries(x.headers).map(([k, v]) => `${k}: ${v}`));
+  const res = x.response;
+  let resBody = res?.text ?? "";
+  try { resBody = JSON.stringify(JSON.parse(resBody), null, 2); } catch {}
+  const stats = [
+    `${x.method} ${new URL(x.url).pathname}`,
+    x.parts ? `multipart/form-data · ${x.parts.length} parts (1 JSON + ${x.parts.length - 1} images)` : "application/json",
+    x.headers["content-encoding"] ? `${kb(x.wireBytes)} on the wire (${esc(x.headers["content-encoding"])}) · ${kb(x.bodyBytes)} uncompressed` : `${kb(x.wireBytes)} body`,
+    res ? `HTTP ${res.status} in ${res.ms} ms` : "no response",
+  ];
+  return `<div class="stats">${stats.map((t) => `<span>${t}</span>`).join("")}</div><pre>` +
+    `<span class="k">${esc(x.method)}</span> ${esc(x.url)}\n${reqHead}\n\n${body}` +
+    (res ? `<span class="res"><span class="k">HTTP ${res.status}</span> ${esc(res.statusText)}\n${head(Object.entries(res.headers).map(([k, v]) => `${k}: ${v}`))}\n\n${chips(esc(resBody), assets, true)}</span>` : "") +
+    `</pre>`;
+}
+
+$("run").addEventListener("click", async () => {
+  $("error").hidden = true;
+  if (!photo) return showError("Add the photo to judge first.");
+  const refs = drafts[mode].map((r) => ({ ...r }));
+  const sentPhoto = photo;
+  $("run").disabled = true;
+  $("status").textContent = "Asking Jev…";
+  try {
+    const res = await fetch("/api/run", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ mode, instructions: $("instructions").value, query: photo, refs, none: $("none").checked }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Request failed");
+    renderResult(data, refs, sentPhoto);
+    $("status").textContent = "";
+  } catch (e) {
+    showError(e.message);
+    $("status").textContent = "";
+  } finally {
+    $("run").disabled = false;
+  }
+});
+function showError(m) { $("error").textContent = m; $("error").hidden = false; }
+
+fetch("/api/presets").then((r) => r.json()).then((p) => { presets = p; setMode(mode); }).catch(() => setMode(mode));
+setMode(mode);
+</script>
+</body>
+</html>

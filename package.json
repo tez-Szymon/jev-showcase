@@ -1,0 +1,14 @@
+{
+  "name": "jev-showcase",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "All Jev demos in one tabbed app, live TypeSafe API only",
+  "scripts": {
+    "setup": "node scripts/setup.mjs",
+    "start": "node hub/server.mjs",
+    "test": "node scripts/each.mjs test",
+    "typecheck": "node scripts/each.mjs typecheck"
+  },
+  "engines": { "node": ">=22.15.0" }
+}

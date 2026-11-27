@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <title>YouTube Insight Filter</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header>
+      <span class="mark">✦</span>
+      <div>
+        <h1>YouTube Insight Filter</h1>
+        <small>Znajdź wartościowe komentarze.</small>
+      </div>
+    </header>
+    <section>
+      <label class="row">Filtr włączony <input id="enabled" type="checkbox" /></label>
+      <p id="status" role="status">Łączenie…</p>
+      <label for="threshold">Minimalna ocena wartości <output id="value">70</output></label
+      ><input id="threshold" type="range" min="0" max="100" /><label for="mode"
+        >Tryb wyświetlania</label
+      ><select id="mode">
+        <option value="highlight">Wyróżniaj wartościowe komentarze</option>
+        <option value="dim">Przyciemniaj mało wartościowe komentarze</option>
+        <option value="only">Pokaż tylko wartościowe komentarze</option></select
+      ><label class="row">Analizuj odpowiedzi<input id="replies" type="checkbox" /></label
+      ><label class="row">Pokaż szczegóły analizy Jev<input id="debug" type="checkbox" /></label>
+      <div class="stats">
+        <div><b id="analyzed">0</b>Przeanalizowano</div>
+        <div><b id="insights">0</b>Wartościowe komentarze</div>
+      </div>
+      <button id="retry">Ponów połączenie</button>
+    </section>
+    <section>
+      <h2>Najwartościowsze komentarze</h2>
+      <div id="top">Otwórz film na YouTube z komentarzami.</div>
+    </section>
+    <footer>
+      Treść komentarzy i tytuł filmu trafiają do lokalnego serwera, a w trybie LIVE także do
+      TypeSafe. Ocena dotyczy wartości wypowiedzi, nie jej prawdziwości.
+    </footer>
+    <script src="popup.js"></script>
+  </body>
+</html>

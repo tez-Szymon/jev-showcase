@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>YouTube Insight Filter · Demo</title>
+    <link rel="stylesheet" href="/demo/style.css" />
+    <link rel="stylesheet" href="/dist/content.css" />
+  </head>
+  <body>
+    <nav>
+      <a href="/" class="brand"
+        ><span>✦</span> insight<span class="brand-light"> / youtube</span></a
+      >
+      <div class="nav-right">
+        <span class="demo-pill">INTERAKTYWNE DEMO</span><button id="theme">Zmień motyw</button>
+      </div>
+    </nav>
+    <main>
+      <div class="intro">
+        <div class="eyebrow">MNIEJ SZUMU. WIĘCEJ WIEDZY.</div>
+        <h1>Dobre pomysły są<br />w komentarzach.</h1>
+        <p>
+          Odkrywaj doświadczenia, sprostowania i opinie<br />warte przeczytania. Jev analizuje, Ty
+          wybierasz.
+        </p>
+      </div>
+      <div class="layout">
+        <div>
+          <section class="video">
+            <div class="video-art">
+              <div class="diagram">
+                <span>CLIENT</span><i></i><span>EDGE CACHE</span><i></i><span>ORIGIN</span>
+              </div>
+              <div class="video-copy">
+                <span class="episode">ARCHITEKTURA SYSTEMÓW / ODC. 024</span>
+                <h2>Ukryty koszt<br />pamięci podręcznej.</h2>
+                <span class="play">▶ <span>18:42 · Architektura w szczegółach</span></span>
+              </div>
+              <span class="art-mark">↗</span>
+            </div>
+            <div class="video-caption">
+              <div>
+                <h2>Pamięć podręczna gotowa na produkcję</h2>
+                <p>Architektura systemów <span>· 42 tys. wyświetleń · 2 dni temu</span></p>
+              </div>
+              <span class="fixture-label">LOKALNE DEMO</span>
+            </div>
+          </section>
+          <section class="discussion">
+            <div class="discussion-heading">
+              <h2>W dyskusji <span id="comment-count"></span></h2>
+              <span>Domyślnie wszystkie komentarze są widoczne</span>
+            </div>
+            <div id="comments"></div>
+            <button id="load-more">Wczytaj 8 kolejnych komentarzy ↓</button>
+          </section>
+        </div>
+        <aside id="insight-panel">
+          <div class="panel-head">
+            <span class="panel-icon">✦</span>
+            <div>
+              <h2>Twój filtr komentarzy</h2>
+              <p>Treść ważniejsza niż popularność.</p>
+            </div>
+            <label class="switch" title="Włącz filtr"
+              ><input id="enabled" type="checkbox" checked /><span></span
+            ></label>
+          </div>
+          <div class="engine">
+            <span><i></i> Jev: <b id="engine-mode">OCZEKIWANIE</b></span
+            ><span>TypeSafe AI</span>
+          </div>
+          <div class="panel-section">
+            <div class="label-row">
+              <label for="threshold">Minimalna ocena wartości</label><output id="value">70</output>
+            </div>
+            <input id="threshold" type="range" min="0" max="100" value="70" />
+            <div class="range-labels">
+              <span>Więcej perspektyw</span><span>Tylko najlepsze</span>
+            </div>
+            <label for="mode" class="small-label">TRYB WYŚWIETLANIA</label
+            ><select id="mode">
+              <option value="highlight">Wyróżniaj wartościowe komentarze</option>
+              <option value="dim">Przyciemniaj mało wartościowe komentarze</option>
+              <option value="only">Pokaż tylko wartościowe komentarze</option></select
+            ><label class="check-row"
+              ><input id="replies" type="checkbox" /> Analizuj odpowiedzi</label
+            ><label class="check-row"
+              ><input id="debug" type="checkbox" /> Pokaż dane wejściowe i wynik Jev</label
+            >
+            <div class="stats">
+              <div><b id="analyzed">0</b><span>Przeanalizowane komentarze</span></div>
+              <div><b id="insights">0</b><span>Wartościowe komentarze</span></div>
+            </div>
+          </div>
+          <div class="panel-section">
+            <div class="top-title">
+              <h3>Najwartościowsze komentarze</h3>
+              <span>WEDŁUG OCENY</span>
+            </div>
+            <p class="hint">Przejdź do komentarza wartego uwagi.</p>
+            <div id="top"></div>
+          </div>
+          <div class="panel-foot">
+            <p id="status" role="status">Analizowanie komentarzy…</p>
+            <button id="retry">Ponów analizę</button>
+            <p>
+              Oceniamy wartość wypowiedzi, nie jej prawdziwość. W trybie LIVE komentarze i tytuł
+              filmu trafiają do TypeSafe przez lokalny serwer.
+            </p>
+          </div>
+        </aside>
+      </div>
+      <footer>
+        YOUTUBE INSIGHT FILTER <span>Pytania o znaczenie. Typowane odpowiedzi. Zwykły kod.</span>
+      </footer>
+    </main>
+    <script src="/demo/fixture.js"></script>
+    <script src="/dist/demo.js"></script>
+  </body>
+</html>
